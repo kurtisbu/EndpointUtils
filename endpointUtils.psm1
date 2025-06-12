@@ -14,7 +14,7 @@ function Get-EndpointComplianceStatus {
             'IntuneManagementExtension',         # Microsoft Intune Management Extension
             'MsSense',                           # Microsoft Defender for Endpoint (MDE Sensor)
             'WinDefend'                          # Windows Defender Antivirus Service
-            # Add your actual BeyondTrust Service Name here after finding it
+            # Add Additional Services as needed
             # e.g., 'btjumpclient_dg'
         ),
 
@@ -133,7 +133,7 @@ function Get-EndpointComplianceStatus {
         Write-Verbose "Bitlocker check skipped as per parameter."
     }
 
-    # --- 4. Registry Key Check (Future Use) ---
+    # --- 4. Registry Key Check ---
     if ($PSBoundParameters.ContainsKey('CheckRegistryKeys') -and $CheckRegistryKeys -and $CheckRegistryKeys.Count -gt 0) {
         Write-Verbose "Checking Registry Keys..."
         $Result.RegistryCompliant = $true 
@@ -183,7 +183,7 @@ function Get-InstalledSoftwareAdvanced {
         'HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall'
     )
     if ($IncludeUserInstalls) {
-        # Ensure HKCU path is accessible; might require specific context or elevation if run as system
+        # Ensure HKCU path is accessible
         try {
             $UserUninstallPath = "Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall"
             if (Test-Path $UserUninstallPath) {
@@ -226,7 +226,7 @@ function Get-InstalledSoftwareAdvanced {
                         Version     = $DisplayVersion
                         Publisher   = $Props.Publisher
                         InstallDate = $Props.InstallDate 
-                        SourcePath  = $Path.Replace('Registry::', '') # Cleaner path
+                        SourcePath  = $Path.Replace('Registry::', '')
                     }
                     if ($ShowAllProperties) {
                         $OutputObject | Add-Member -MemberType NoteProperty -Name InstallLocation -Value $Props.InstallLocation
@@ -279,7 +279,7 @@ function Test-CommonNetworkPorts {
 
         foreach ($Port in $Ports) {
             Write-Verbose "Testing port $Port on $HostName..."
-            $PortTestSucceeded = $false # Default to false
+            $PortTestSucceeded = $false 
             try {
                 # Test-NetConnection returns $true on success with -InformationLevel Quiet, throws on failure
                 $PortTestSucceeded = Test-NetConnection -ComputerName $HostName -Port $Port -InformationLevel Quiet -WarningAction SilentlyContinue -ErrorAction Stop -TimeoutSeconds $TimeoutSeconds
