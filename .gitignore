@@ -1,0 +1,13 @@
+# PowerShell specific
+/Modules/
+/en-US/
+*.ps1.Help.xml
+Help.xml
+PSDeploy.ps1
+
+# Visual Studio Code
+.vscode/
+
+# Windows
+Thumbs.db
+Desktop.ini
